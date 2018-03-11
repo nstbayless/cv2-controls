@@ -1,0 +1,12 @@
+$0420#simon-facing#
+$006D#simon-xspeed#
+$023F#simon-x#
+$0324#simon-y#
+$0238#sim-mirror-y-a#
+$023C#sim-mirror-y-b#
+$0244#sim-mirror-y-c#
+$0300#simon-image-index#
+$0086#time-hour#
+$0085#time-second#
+$0080#energy#
+$03D8#simon-state#

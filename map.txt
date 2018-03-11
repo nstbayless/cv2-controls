@@ -1,0 +1,38 @@
+# ROM and RAM map
+
+## RAM map
+
+$420: direction
+$6d: air x speed
+
+$80 energy
+$F1 - player input
+$F7 - player input
+$86 hour
+
+$3d8 simon's action state
+- 0: standing
+- 1: walking
+- 2: jumping
+- 3: crouching
+- 4: attacking
+- 5: falling
+- 6: knockback
+- 7: stair find
+- 9: stair stand
+- A: stair walk
+
+$300: image index
+$23f: x coordinate
+
+y-coordinate:
+$0238
+$023c
+$0244
+$0324 (master)
+
+
+
+## ROM map
+
+Simon jump table jumping: xC1D3

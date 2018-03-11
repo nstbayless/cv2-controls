@@ -11,6 +11,7 @@ fi
 
 if [ "$OSTYPE" = "linux-gnu" ]
 then
+  chmod a+x "./flips/flips-linux"
   flips="./flips/flips-linux"
 fi
 
