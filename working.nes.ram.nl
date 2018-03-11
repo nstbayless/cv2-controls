@@ -10,3 +10,4 @@ $0086#time-hour#
 $0085#time-second#
 $0080#energy#
 $03D8#simon-state#
+$036C#simon-vspeed#
