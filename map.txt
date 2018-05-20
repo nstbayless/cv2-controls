@@ -11,10 +11,11 @@ $F7 - player input
 $86 hour
 
 $36c: vspeed
+$37e: vspeed-frac
 
 $3d8 simon's action state
 - 0: standing
-- 1: walking
+- 1: walkingO
 - 2: jumping
 - 3: crouching
 - 4: attacking
@@ -35,4 +36,8 @@ $0324 (master)
 
 ## ROM map
 
-Simon jump table jumping: ROM C1Df from 89CD
+Simon dispatch: 81c4
+
+## Edits
+custom jump: K3:9CF4
+Simon table jumping edit: ROM C1De (9CF4, previous value: 89CD)

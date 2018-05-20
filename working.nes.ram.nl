@@ -11,3 +11,5 @@ $0085#time-second#
 $0080#energy#
 $03D8#simon-state#
 $036C#simon-vspeed#
+$00F7#f7-input#
+$037E#simon-vspeed-frac#
