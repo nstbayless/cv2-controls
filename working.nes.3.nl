@@ -7,3 +7,5 @@ $9D12#neutral-x#
 $9D15#2: v-cancel#
 $81C4#simon-dispatch#
 $9D2A#return#
+$86E0#set-falling?#
+$877A#clear-simon-speed#
