@@ -3,7 +3,6 @@ $DECC#write-simon-state(+x)#
 $DEBD#write-simon-state#
 $DEC6#set-simon-state-jump(+x)#
 $DECA#set-simon-state-walk(+x)#
-$FF01#custom-knockback-hit#
 $D390#.. set simon state to knockbac#
 $FF0A#set-and-return#
 $D37E#} .. has set Y to direction#
@@ -17,3 +16,8 @@ $FF08#return#
 $D395#.. > continue knocback#
 $FF03#compare facing to enemy's#
 $D362#set-simon-yspeed#
+$FF12#custom-iframe-reduction#
+$FF20#decrement#
+$FF1B#set0#
+$FEFA#custom-knockback-hit#
+$FF24#hit-while-attacking#

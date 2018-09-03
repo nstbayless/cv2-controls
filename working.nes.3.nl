@@ -28,3 +28,4 @@ $9D7D#un-hitstun#
 $9D84#if was moving, restore movemen#
 $9D89#yspeed...#
 $9D96#xspeed..#
+$9D46#custom stairjumping#
