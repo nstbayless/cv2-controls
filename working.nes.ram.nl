@@ -14,4 +14,8 @@ $036C#simon-vspeed#
 $00F7#f7-input#
 $037E#simon-vspeed-frac#
 $0390#simon-sub-state#
-$00F5#key-pressed-copy?#
+$00F5#f5-key-pressed-input?#
+$0067#simon-xspeed-help-a?#
+$006C#simon-xspeed-frac#
+$04F8#simon-iframes#
+$047A#simon-stair-step-timer#

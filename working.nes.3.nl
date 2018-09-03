@@ -16,5 +16,15 @@ $892E#possibly-switch-states#
 $9D34#return#
 $9D31#fixed-facing-if-attacking#
 $8A0E#simon-step-knockback#
-$9D4A#custom-knockback#
 $9D37#custom-jump-switch#
+$8AD9#simon-step-stair-stand#
+$8A52#simon-step-stair-walk#
+$88D9#do-jump#
+$857B#simon-get-hit?#
+$9D70#hitstun#
+$9D4A#custom stairjumping#
+$9D51#check input#
+$9D7D#un-hitstun#
+$9D84#if was moving, restore movemen#
+$9D89#yspeed...#
+$9D96#xspeed..#
