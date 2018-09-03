@@ -24,6 +24,7 @@ $3d8 simon's action state
 - 7: stair find
 - 9: stair stand
 - A: stair walk
+$390 simon's action substate. Stores state when also attacking.
 
 $300: image index
 $23f: x coordinate
@@ -39,5 +40,6 @@ $0324 (master)
 Simon dispatch: 81c4
 
 ## Edits
+custom falling: ROM x00C6F9 (02, was 05)
 custom jump: K3:9CF4
-Simon table jumping edit: ROM C1De (9CF4, previous value: 89CD)
+edits to jump-attack and jump logic (redirects to custom jump): x00C9DB-x00C9E2

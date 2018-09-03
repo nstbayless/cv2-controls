@@ -13,3 +13,5 @@ $03D8#simon-state#
 $036C#simon-vspeed#
 $00F7#f7-input#
 $037E#simon-vspeed-frac#
+$0390#simon-sub-state#
+$00F5#key-pressed-copy?#
