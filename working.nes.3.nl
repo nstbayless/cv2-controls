@@ -15,3 +15,6 @@ $89D6#..jump-logic (base)#
 $892E#possibly-switch-states#
 $9D34#return#
 $9D31#fixed-facing-if-attacking#
+$8A0E#simon-step-knockback#
+$9D4A#custom-knockback#
+$9D37#custom-jump-switch#
