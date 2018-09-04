@@ -21,3 +21,7 @@ $FF20#decrement#
 $FF1B#set0#
 $FEFA#custom-knockback-hit#
 $FF24#hit-while-attacking#
+$FF35#heart-reset#
+$FF51#add nibs#
+$FF5D#s$49 -> $48#
+$FF6A#e$49#
