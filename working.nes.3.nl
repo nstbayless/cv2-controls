@@ -29,3 +29,6 @@ $9D84#if was moving, restore movemen#
 $9D89#yspeed...#
 $9D96#xspeed..#
 $9D46#custom stairjumping#
+$805B#.. set xspeed#
+$806F#+xspeed#
+$9DA4#zero fracxspd then custom jump#

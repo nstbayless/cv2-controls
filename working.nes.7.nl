@@ -21,3 +21,5 @@ $FF20#decrement#
 $FF1B#set0#
 $FEFA#custom-knockback-hit#
 $FF24#hit-while-attacking#
+$C5D9#add-with-spillover (A->$X;X+1)#
+$C5E3#subtract A+1 w/spill from $X#
