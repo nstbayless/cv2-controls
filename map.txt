@@ -39,6 +39,17 @@ $023c
 $0244
 $0324 (master)
 
+## RAM ENEMIES
+$3b94 or $3b9a seems to store list of enemies. Ends at $3ba5 inclusive.
+- 3 pacing skeleton
+- 4: fire-breathing fish man
+- 6: werewolf
+- 13 jumping werewolf
+- 2A: NPC man with short black hair and boots
+- 2E: NPC in cloak. Eery.
+- 35: NPC with cane
+- 37: powerup / heart
+
 ## ROM map
 
 Simon dispatch: 81c4
@@ -48,3 +59,25 @@ custom falling: ROM x00C6F9 (02, was 05)
 custom jump: K3:9CF4
 edits to jump-attack, jump logic, knockback (redirects to custom jump): x00C9DB...
 simon jump table for stair jumping: ROM 0x00c1ec-0x00c1ef
+
+## Function notation
+
+// indicates a comment
+
+  // X might always be 12 here.
+
+.. indicates description (of what code is doing / of control flow)
+
+  .. handle xspeed
+
+to indicate register signatures, a lower case means ignored/overwritten, upper case means used meaningfully, * means uncertain. Order is always AXY. | means unaffected. Example:
+
+1.    subroutine ? AXy:Axy
+2.	  check tile A**:*Xy
+3.    check NPC Axy:ay |X
+4.    subroutine ? axY: |AXY
+  
+1. This soubroutine takes A and X as arguments and returns a value in A.
+2. This subroutine takes A as an argument (and possibly XY as well) and returns X. The return value of A is possibly meaningful but the return value of Y is not.
+3. This subroutine takes only A as an argument, returns nothing, and X is ignored.
+4. This subroutine returns all registers as they were, but the value of Y is meaningful as input. This syntax can be abbreviated as axY|AXY

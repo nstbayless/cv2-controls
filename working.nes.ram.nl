@@ -19,3 +19,7 @@ $0067#simon-xspeed-help-a?#
 $006C#simon-xspeed-frac#
 $04F8#simon-iframes#
 $047A#simon-stair-step-timer#
+$0093#in air?#
+$0097#what-found#
+$03BA#entities-list#
+$03B4#entities-list-sub6#
