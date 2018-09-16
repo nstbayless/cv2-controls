@@ -23,3 +23,8 @@ $FEFA#custom-knockback-hit#
 $FF24#hit-while-attacking#
 $C5D9#add-with-spillover (A->$X;X+1)#
 $C5E3#subtract A+1 w/spill from $X#
+$FF2C#simon-iframes-draw#
+$FF23#return#
+$FF33#draw#
+$FF36#check state#
+$FF3D#draw if dead#

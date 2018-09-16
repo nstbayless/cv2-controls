@@ -40,7 +40,7 @@ $0244
 $0324 (master)
 
 ## RAM ENEMIES
-$3b94 or $3b9a seems to store list of enemies. Ends at $3ba5 inclusive.
+$3b4 or $3ba seems to store list of enemies. Ends at $3ba5 inclusive.
 - 3 pacing skeleton
 - 4: fire-breathing fish man
 - 6: werewolf
