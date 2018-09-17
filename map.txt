@@ -31,13 +31,9 @@ $3d8 simon's action state
 $390 simon's action substate. Stores state when also attacking.
 
 $300: image index
-$23f: x coordinate
 
 y-coordinate:
-$0238
-$023c
-$0244
-$0324 (master)
+$0324
 
 ## RAM ENEMIES
 $3b4 or $3ba seems to store list of enemies. Ends at $3ba5 inclusive.
@@ -49,6 +45,10 @@ $3b4 or $3ba seems to store list of enemies. Ends at $3ba5 inclusive.
 - 2E: NPC in cloak. Eery.
 - 35: NPC with cane
 - 37: powerup / heart
+
+## RAM SPRITES
+
+Starting at $230 is a list of sprites. Each byte is 4 bytes: Y, subimage, palette | flipped, X.
 
 ## ROM map
 
