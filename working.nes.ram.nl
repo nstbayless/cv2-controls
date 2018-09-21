@@ -24,3 +24,4 @@ $0097#what-found#
 $03BA#entities-list#
 $03B4#entities-list-sub6#
 $0200#sprites#
+$0348#simon-x?#

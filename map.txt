@@ -34,6 +34,12 @@ $300: image index
 
 y-coordinate:
 $0324
+x-coordinate:
+$348
+
+## RAM WORLD/ZONE
+
+[$520, $6F0) terrain data
 
 ## RAM ENEMIES
 $3b4 or $3ba seems to store list of enemies. Ends at $3ba5 inclusive.

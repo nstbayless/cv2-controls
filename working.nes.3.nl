@@ -60,3 +60,4 @@ $9DAB#should v-cancel?#
 $9D7C#.. return#
 $9DBF#.. return#
 $9DC0#should v-cancel? (wrapper)#
+$9DCA#cutscene-check#
