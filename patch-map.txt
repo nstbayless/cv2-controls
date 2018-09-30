@@ -1,0 +1,74 @@
+====== IPS summary ======
+hunks: 11
+regular hunks: 11
+RLE hunks:     0
+sum of hunk lengths: x00000157 bytes (343 bytes)
+========= hunks =========
+
+# This is a jump to the Simon drawnig code (patched in below).
+# jumps to possibly not draw Simon (if iframes is odd)
+regular hunk on bytes x002BF3-x002BF4 (2 bytes)
+A5 FF
+
+# This replaces the code which ticks down iframes by jumping to new code (below).
+# This is because iframes now have two distinct possibilities. If iframes is ever 80, it
+# gets set to 0. Otherwise, iframes counts down as usual. Below 1-7F counts as hitstun on stairs.
+regular hunk on bytes x004658-x00465F (8 bytes)
+20 12 FF EA EA EA EA EA
+
+# When getting hit, this code jumps to two different
+# places depending on if knockback is on stairs or not (or dead).
+regular hunk on bytes x004854-x004864 (17 bytes)
+AD D8 03 C9 09 30 07 A5 80 F0 03 4C 95 D3 4C FA
+FE
+
+# Patch to Simon's jump table for hacked stair logic
+regular hunk on bytes x00C1EC-x00C1EF (4 bytes)
+46 9D 46 9D
+
+# When walking off cliff, enter jump state (2) instead of fall state(5)
+regular hunk on byte x00C6F9 (1 byte)
+02
+
+# Modifies Simon's aerial code to jump to custom code (below)
+regular hunk on bytes x00C9DB-x00C9E2 (8 bytes)
+37 9D A5 F5 29 40 F0 F7
+
+# Modifies Simon's knockback code to jump to custom code (below)
+regular hunk on byte x00CA27 (1 byte)
+B2
+
+# Custom aerial/knockback code
+regular hunk on bytes x00DD04-x00DDE8 (229 bytes)
+A2 01 AC 20 04 A5 F7 29 03 F0 13 4A 90 07 86 6D
+8E 20 04 F0 0C CA 8E 20 04 CA 86 6D D0 03 CA 86
+6D A5 F7 29 80 D0 0F 20 C0 9D 10 0A A9 00 8D 6C
+03 A9 00 8D 7E 03 AD D8 03 C9 02 F0 03 8C 20 04
+4C D6 89 AD D8 03 C9 06 D0 66 AD 6C 03 10 61 30
+EF FF AD F8 04 C9 80 10 04 C9 20 10 1F A5 F5 29
+80 F0 03 D0 0E EA AD D8 03 C9 09 D0 03 4C D9 8A
+4C 52 8A A9 00 85 6D 85 6C 4C D9 88 F0 0B A9 00
+A0 00 20 6A D3 20 62 D3 60 AD D8 03 C9 09 F0 EE
+A2 00 AD 00 03 C9 08 30 01 CA 8E 6C 03 A9 80 8D
+7E 03 85 6C A2 00 AD 20 04 D0 01 CA 86 6D D0 C0
+A9 00 85 6C 4C F4 9C AD 6C 03 10 CC A0 10 20 ED
+86 C9 01 10 06 C9 02 10 02 A9 FF 60 98 48 20 CA
+9D AA 68 A8 8A 60 AD ED 04 C9 FF D0 DA AD A4 04
+C9 01 D0 D3 60
+
+# On spawning, set iFrames to F8 instead of 78 so that
+# Simon can still walk down stairs even while flashing
+regular hunk on byte x01C556 (1 byte)
+F8
+
+# custom knockback and iframe ticking code
+regular hunk on bytes x01FF0A-x01FF3B (50 bytes)
+AD D8 03 C9 04 F0 23 A0 00 BD 48 03 CD 48 03 90
+01 C8 8C 20 04 4C 6F D3 AD F8 04 F0 04 C9 80 D0
+05 A9 01 8D F8 04 CE F8 04 60 A9 09 8D D8 03 4C
+95 D3
+
+# draw Simon conditional on iframe parity.
+regular hunk on bytes x01FFB5-x01FFCA (22 bytes)
+AD F8 04 29 01 D0 03 4C DC AA AD D8 03 EA EA EA
+EA 29 80 D0 F2 60

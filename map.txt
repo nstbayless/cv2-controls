@@ -58,6 +58,8 @@ Starting at $230 is a list of sprites. Each byte is 4 bytes: Y, subimage, palett
 
 ## ROM map
 
+Palette info: ROM x01CAC0
+
 Simon dispatch: 81c4
 
 ## Edits
