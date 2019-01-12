@@ -39,6 +39,20 @@ $348
 
 ## RAM WORLD/ZONE
 
+$30: current region type
+	0: town
+	1: castle
+	2: forest and caves
+	3: cemetary
+$50: current area in region
+	(this number together with the region type determines the actual current area)
+$64: current chunkset (macro-tileset) -- comes from $30 (region type)
+$70:71: pointer to area tile data struct in bank 2:
+	$+0: width (in screens)
+	$+1: height (in screens)
+	Then an array of length 4 * width * height bytes. The first
+	half of this array is pointers to the tile data for each screen.
+	The second half of the array is pointers of currently unknown meaning.
 [$520, $6F0) terrain data
 
 ## RAM ENEMIES
