@@ -51,7 +51,7 @@ $70:71: pointer to area tile data struct in bank 2:
 	$+0: width (in screens)
 	$+1: height (in screens)
 	Then an array of length 4 * width * height bytes. The first
-	half of this array is pointers to the tile data for each screen.
+	half of this array is pointers to the tile chunk data for each screen.
 	The second half of the array is pointers of currently unknown meaning.
 [$520, $6F0) terrain data
 
