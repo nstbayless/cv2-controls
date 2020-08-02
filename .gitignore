@@ -6,3 +6,7 @@ edit.nes
 *.deb
 *.d
 *.cdl
+*.zip
+base-*.nes
+inc-*.asm
+*.nes
