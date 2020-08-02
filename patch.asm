@@ -4,8 +4,6 @@ INCLUDE "pre.asm"
 
 INCLUDE "defs.asm"
 
-INCLUDE "inc-opt.asm"
-
 ; addresses
 
 BANK3_FREE = $b74c ; free space at the end of bank 3
@@ -15,7 +13,7 @@ BANK 0
 BASE $8000
 
 FROM $ABE2
-    JMP label_z
+    JSR custom_flicker_draw_code
 
 ; ------------------------------------------------------------------------------
 BANK 1
@@ -24,20 +22,21 @@ BASE $8000
 ifdef BISQWIT
 
     FROM $864E
-        db #$AC
-        db #$B7
+        db #>custom_flicker_draw_code
+        db #<custom_flicker_draw_code
         
     FROM $86F9
     label_aa:
         
     FROM $B7AC
+    custom_flicker_draw_code:
         DEX
         STX player_iframes
         TXA
         CMP #$80
         BNE +
         LDX #$00
-        STX iframes
+        STX player_iframes
         +
         JMP label_aa
         
@@ -78,6 +77,7 @@ FROM $81dc
     dw #custom_jump
 
 FROM $86E8:
+    ; normally this would be #$05.
     LDA #$02
 
 FROM $86ED:
@@ -93,7 +93,6 @@ FROM $89CA
     LDA $F5
     AND #$40
     BEQ -
-endif
 
 FROM $89D6
 jump_logic:
@@ -107,10 +106,6 @@ player_step_9_stair_stand:
 ; ??????????????????????????
 FROM $8A16
 BNE $89CA
-
-; --------------------------------------
-FROM $9DC0
-inject_should_v_cancel:
 
 FROM $AADC
 draw_player:
@@ -146,7 +141,7 @@ label_c:
     LDA button_down
     AND #$80
     BNE label_d
-    JSR inject_should_v_cancel
+    JSR should_v_cancel
     BPL label_d
     LDA #$00
     STA player_vspeed
@@ -176,7 +171,7 @@ custom_jump:
     CMP #$80
     BPL label_f
     CMP #$20
-    BPL label_o
+    BPL label_z
 
 label_f:
     LDA button_pressed
@@ -199,6 +194,8 @@ label_h:
     STA player_air_xspeed
     STA player_xspeed_frac
     JMP do_jump
+    
+label_z:
     BEQ label_j
 
 label_k:
@@ -206,8 +203,6 @@ label_k:
     LDY #$00
     JSR set_player_xspeed
     JSR set_player_yspeed
-
-label_rts:
     RTS
 
 label_j:
@@ -249,7 +244,10 @@ label_n:
     CMP #$02
     BPL label_rts
     LDA #$FF
+label_rts:
     RTS
+    
+should_v_cancel:
     TYA
     PHA
     JSR label_q
@@ -267,8 +265,6 @@ label_q:
     CMP #$01
     BNE label_n
     RTS
-
-ENDSUPPRESS
 
 ; ------------------------------------------------------------------------------
 BANK 7
@@ -291,7 +287,7 @@ FROM $D395:
 continue_knockback:
 
 ; ----------------------------------------------------
-BASE $FEFA
+FROM $FEFA
 
 label_y:
     LDA player_state
@@ -329,20 +325,23 @@ label_r:
 ; ----------------------------------------------------
 FROM $FFA5
 
-label_z:
-    LDA player_iframes
-    AND #$01
-    BNE label_v
+;draw Simon conditional on iframe parity.
+ifndef BISQWIT
+    custom_flicker_draw_code:
+        LDA player_iframes
+        AND #$01
+        BNE label_v
 
-label_w:
-    JMP draw_player
+    label_w:
+        JMP draw_player
 
-label_v:
-    LDA player_state
-    NOP
-    NOP
-    NOP
-    NOP
-    AND #$80
-    BNE label_w
-    RTS
+    label_v:
+        LDA player_state
+        NOP
+        NOP
+        NOP
+        NOP
+        AND #$80
+        BNE label_w
+        RTS
+endif

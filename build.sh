@@ -13,6 +13,11 @@ fi
 mkdir $export
 cp included-readme.txt $export/README.txt
 
+if [ ! -d "nes" ]
+then
+    mkdir "nes"
+fi
+
 for i in {0..1}
 do
     BASE="${bases[$i]}"
@@ -76,7 +81,12 @@ do
     
     # apply ips patch
     chmod a+x flips/flips-linux
-    rm patch.nes 2>&1 > /dev/null
+    
+    if [ -f patch.nes ]
+    then
+      rm patch.nes
+    fi
+    
     flips/flips-linux --apply "$outfile.ips" "$BASE" patch.nes
     if ! [ -f "patch.nes" ]
     then
@@ -92,11 +102,21 @@ do
         continue
     fi
     
-    cp $outfile.ips "$export/$folder/"
+    mv "$outfile.nes" nes/
+    
+    if [ -f patch.nes ]
+    then
+      rm patch.nes
+    fi
+    
+    mv $outfile.ips "$export/$folder/"
 done
 
 echo "============================================"
 echo "Assembling export."
 
-rm cv2-controls.zip 2>&1 > /dev/null
+if [ -f CV2-controls.zip ]
+then
+  rm cv2-controls.zip 2>&1
+fi
 zip -r cv2-controls.zip $export/*

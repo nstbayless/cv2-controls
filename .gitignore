@@ -10,3 +10,4 @@ edit.nes
 base-*.nes
 inc-*.asm
 *.nes
+*.nes.*

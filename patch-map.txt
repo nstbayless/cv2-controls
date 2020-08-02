@@ -5,7 +5,7 @@ RLE hunks:     0
 sum of hunk lengths: x00000157 bytes (343 bytes)
 ========= hunks =========
 
-# This is a jump to the Simon drawnig code (patched in below).
+# This is a jump to the Simon drawing code (patched in below).
 # jumps to possibly not draw Simon (if iframes is odd)
 regular hunk on bytes x002BF3-x002BF4 (2 bytes)
 A5 FF

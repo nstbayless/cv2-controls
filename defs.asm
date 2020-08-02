@@ -2,36 +2,26 @@
 ; memory address values
 ENUM $0
 
-MACRO DEF a b
-    BASE x
-    b: db #$0
-ENDM
-
-MACRO DEFW a b
-    BASE x
-    b: dw #$0
-ENDM
-
 ; ------------------------------------------------------------------------------
-DEF $F1 button_A ; ??
-DEF $F5 button_pressed
-DEF $F7 button_down
+button_A EQU $F1 ; ??
+button_pressed EQU $F5
+button_down EQU $F7
 ; ------------------------------------------------------------------------------
 ; player properties
-DEF $6d player_air_xspeed
-DEF $420 player_facing
+player_air_xspeed EQU $6d
+player_facing EQU $420
 
-DEF $80 player_energy
-DEF $4f8 player_iframes
+player_energy EQU $80
+player_iframes EQU $4f8
 
-DEF $6d player_xspeed
-DEF $6c player_xspeed_frac
+player_xspeed EQU $6d
+player_xspeed_frac EQU $6c
 
-DEF $36c player_vspeed
-DEF $37e player_vspeed_frac
+player_vspeed EQU $36c
+player_vspeed_frac EQU $37e
 
-DEF $324 player_y
-DEF $348 player_x
+player_y EQU $324
+player_x EQU $348
 
 ; Player Action State
 ; 0: standing
@@ -44,30 +34,30 @@ DEF $348 player_x
 ; 7: stair find
 ; 9: stair stand
 ; A: stair walk
-DEF $3d8 player_state
+player_state EQU $3d8
 
 ; stores state when also attacking
-DEF $390 player_substate
+player_substate EQU $390
 
 ; image index
-DEF $300 player_image
+player_image EQU $300
 
 ; ------------------------------------------------------------------------------
 ; world properties
-DEF $86 world_hour
+world_hour EQU $86
 
 ; 0: town
 ; 1: castle
 ; 2: forest and caves
 ; 3: cemetary
-DEF $30 world_region
+world_region EQU $30
 
 ; area in region
 ; this number together with the region determines actual area.
-DEF $50 world_region_area
+world_region_area EQU $50
 
 ; macro-tileset -- comes from world_region
-DEF $64 world_chunkset
+world_chunkset EQU $64
 
 ; points to bank 2 area struct
 ;   1 byte: width (in screens)
@@ -75,11 +65,11 @@ DEF $64 world_chunkset
 ;   Then an array of length 4 * width * height bytes. The first
 ;   half of this array is pointers to the tile chunk data for each screen.
 ;   The second half of the array is pointers of currently unknown meaning.
-DEFW $70 world_area_tile_ptr
+world_area_tile_ptr EQU $70
 
 ; half-inclusive range of terrain data.
-DEFW $520 terrain_start
-DEFW $6F0 terrain_end
+terrain_start EQU $520
+terrain_end EQU $6F0
 
 ; ------------------------------------------------------------------------------
 ; graphics
