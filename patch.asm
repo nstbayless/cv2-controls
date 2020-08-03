@@ -4,37 +4,47 @@ INCLUDE "pre.asm"
 
 INCLUDE "defs.asm"
 
-; location of some usable space in the different banks
-BANK3_FREE = $b74c
+; addresses
 
-ifndef BISQWIT
-    BANK7_FREE = $bb00
-else
-    BANK7_FREE = $b800
-endif
+; free space in banks
+BANK3_FREE = $b74c
+BANK1_FREE = $b7ac
 
 ; ------------------------------------------------------------------------------
 BANK 0
 BASE $8000
 
-FROM $ABE2
-    JSR custom_flicker_draw_code
+ifndef BISQWIT
+    FROM $ABE2
+        JSR custom_flicker_draw_code
+endif
 
 ; ------------------------------------------------------------------------------
 BANK 1
 BASE $8000
 
+FROM $8844
+    LDA player_state
+    CMP #$09
+    BMI label_x
+    LDA $80
+    BEQ label_x
+    JMP continue_knockback
+
+label_x:
+    JMP label_y
+
 ifdef BISQWIT
 
-    FROM $864E
-        db #>custom_flicker_draw_code
-        db #<custom_flicker_draw_code
+    FROM $864D
+        JSR custom_iframe_tick
         
     FROM $86F9
     label_aa:
         
-    FROM $B7AC
-    custom_flicker_draw_code:
+    FROM BANK1_FREE
+    
+    custom_iframe_tick:
         DEX
         STX player_iframes
         TXA
@@ -45,6 +55,10 @@ ifdef BISQWIT
         +
         JMP label_aa
         
+    include "flicker.asm"
+    
+    BANK1_FREE = $
+
 else
 
     FROM $8648
@@ -54,19 +68,42 @@ else
         NOP
         NOP
         NOP
-    
-    FROM $8844
-        LDA player_state
-        CMP #$09
-        BMI label_x
-        LDA $80
-        BEQ label_x
-        JMP continue_knockback
-
-    label_x:
-        JMP label_y
 
 endif
+
+FROM BANK1_FREE
+label_y:
+    LDA player_state
+    CMP #$04 ; attacking
+    BEQ label_r
+    LDY #$00
+    LDA player_x,X
+    CMP player_x
+    BCC label_u
+    INY
+
+label_u:
+    STY player_facing
+    JMP set_player_knockback
+    
+custom_iframes_reduction:
+    LDA player_iframes
+    BEQ label_t
+    CMP #$80
+    BNE label_s
+
+label_t:
+    LDA #$01
+    STA player_iframes
+
+label_s:
+    DEC player_iframes
+    RTS
+
+label_r:
+    LDA #$09 ; stair-find
+    STA player_state
+    JMP continue_knockback
 
 ; ------------------------------------------------------------------------------
 BANK 3
@@ -294,59 +331,7 @@ continue_knockback:
 ; ----------------------------------------------------
 FROM $FEFA
 
-label_y:
-    LDA player_state
-    CMP #$04 ; attacking
-    BEQ label_r
-    LDY #$00
-    LDA player_x,X
-    CMP player_x
-    BCC label_u
-    INY
-
-label_u:
-    STY player_facing
-    JMP set_player_knockback
-    
-custom_iframes_reduction:
-    LDA player_iframes
-    BEQ label_t
-    CMP #$80
-    BNE label_s
-
-label_t:
-    LDA #$01
-    STA player_iframes
-
-label_s:
-    DEC player_iframes
-    RTS
-
-label_r:
-    LDA #$09 ; stair-find
-    STA player_state
-    JMP continue_knockback
-
-; ----------------------------------------------------
-FROM $FFA5
-
 ;draw Simon conditional on iframe parity.
 ifndef BISQWIT
-    custom_flicker_draw_code:
-        LDA player_iframes
-        AND #$01
-        BNE label_v
-
-    label_w:
-        JMP draw_player
-
-    label_v:
-        LDA player_state
-        NOP
-        NOP
-        NOP
-        NOP
-        AND #$80
-        BNE label_w
-        RTS
+    include "flicker.asm"
 endif
