@@ -11,3 +11,4 @@ base-*.nes
 inc-*.asm
 *.nes
 *.nes.*
+cv2-controls

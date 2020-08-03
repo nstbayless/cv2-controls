@@ -7,8 +7,8 @@ INCLUDE "defs.asm"
 ; addresses
 
 ; free space in banks
-BANK3_FREE = $b74c
 BANK1_FREE = $b7ac
+BANK3_FREE = $b74c
 
 ; ------------------------------------------------------------------------------
 BANK 0
@@ -23,15 +23,15 @@ endif
 BANK 1
 BASE $8000
 
+; injection in knockback code.
 FROM $8844
     LDA player_state
-    CMP #$09
-    BMI label_x
-    LDA $80
-    BEQ label_x
+    CMP #$09 ; is on stairs?
+    BMI +
+    LDA player_energy
+    BEQ +
     JMP continue_knockback
-
-label_x:
+    +
     JMP label_y
 
 ifdef BISQWIT
@@ -61,7 +61,9 @@ ifdef BISQWIT
 
 else
 
+    ; iframe reduction
     FROM $8648
+    inject_iframe_reduction:
         JSR custom_iframes_reduction
         NOP
         NOP
@@ -75,35 +77,35 @@ FROM BANK1_FREE
 label_y:
     LDA player_state
     CMP #$04 ; attacking
-    BEQ label_r
+    BEQ ++
     LDY #$00
+    ; compare enemy's x position and player's x position
     LDA player_x,X
     CMP player_x
-    BCC label_u
+    BCC +
     INY
-
-label_u:
+    +
     STY player_facing
     JMP set_player_knockback
     
-custom_iframes_reduction:
-    LDA player_iframes
-    BEQ label_t
-    CMP #$80
-    BNE label_s
-
-label_t:
-    LDA #$01
-    STA player_iframes
-
-label_s:
-    DEC player_iframes
-    RTS
-
-label_r:
-    LDA #$09 ; stair-find
+    ++
+    LDA #$09 ; is on stairs?
     STA player_state
     JMP continue_knockback
+        
+ifndef BISQWIT
+    custom_iframes_reduction:
+        LDA player_iframes
+        BEQ +
+        CMP #$80
+        BNE ++
+        +
+        LDA #$01
+        STA player_iframes
+        ++
+        DEC player_iframes
+        RTS
+endif
 
 ; ------------------------------------------------------------------------------
 BANK 3
@@ -115,10 +117,12 @@ FROM $81c4
 
 ; player jump table
 FROM $81dc
-    dw #custom_jump
-    dw #custom_jump
+    dw #custom_stairs
+    dw #custom_stairs
 
 FROM $86E8:
+    ; when walking off a cliff, enter jump state (2) 
+    ; instead of fall state (5).
     ; normally this would be #$05.
     LDA #$02
 
@@ -130,14 +134,17 @@ FROM $88D9
 do_jump:
 
 FROM $89CA
-    -
-    JMP label_o
+    
+jmp_to_custom_jump_logic:
+    JMP custom_jump_logic
+    
+player_step_jump:
     LDA $F5
     AND #$40
-    BEQ -
+    BEQ jmp_to_custom_jump_logic
 
 FROM $89D6
-jump_logic:
+player_jump_logic:
 
 FROM $8A52
 player_step_A_stair_walk:
@@ -145,9 +152,9 @@ player_step_A_stair_walk:
 FROM $8AD9
 player_step_9_stair_stand:
 
-; ??????????????????????????
+; knockback injection -- jump to custom jump code.
 FROM $8A16
-BNE $89CA
+BNE jmp_to_custom_jump_logic
 
 FROM $AADC
 draw_player:
@@ -160,124 +167,130 @@ custom_jump_helper:
     LDX #$01
     LDY player_facing
     LDA button_down
-    AND #$03
-    BEQ label_a
-    LSR A
-    BCC label_b
+    AND #$03 ; holding left and/or right?
+    BEQ air_neutral_direction
+    LSR
+    BCC air_left_tilt
     STX player_air_xspeed
     STX player_facing
-    BEQ label_c
+    BEQ air_right_tilt
 
-label_b:
+air_left_tilt:
     DEX
     STX player_facing
     DEX
     STX player_air_xspeed
-    BNE label_c
+    BNE air_right_tilt
 
-label_a:
+air_neutral_direction:
     DEX
     STX player_air_xspeed
 
-label_c:
+air_right_tilt:
     LDA button_down
     AND #$80
-    BNE label_d
+    BNE no_vcancel
     JSR should_v_cancel
-    BPL label_d
+    BPL no_vcancel
+    
+vcancel:
+    ; set player yspeed to 0.
     LDA #$00
-    STA player_vspeed
+    STA player_yspeed
     LDA #$00
-    STA player_vspeed_frac
+    STA player_yspeed_frac
 
-label_d:
+no_vcancel:
     LDA player_state
-    CMP #$02
-    BEQ label_e
+    CMP #$02 ; is jumping? (and not attacking)
+    BEQ jmp_to_jump_logic
+    ; reset facing if player is attacking
     STY player_facing
+jmp_to_jump_logic:
+    JMP player_jump_logic
 
-label_e:
-    JMP jump_logic
-
-label_o:
+custom_jump_logic:
     LDA player_state
-    CMP #$06
-    BNE label_p
-    LDA player_vspeed
-    BPL label_p
-    BMI label_e
-    db #$ff
+    CMP #$06 ; is knockback?
+    BNE zero_fracxspeed_then_custom_jump
+    LDA player_yspeed
+    BPL zero_fracxspeed_then_custom_jump
+    BMI jmp_to_jump_logic
 
-custom_jump:
+custom_stairs:
     LDA player_iframes
     CMP #$80
-    BPL label_f
+    BPL custom_stair_logic
     CMP #$20
-    BPL label_z
+    BPL hitstun
 
-label_f:
+custom_stair_logic: 
+    ; player can jump from the stairs.
     LDA button_pressed
-    AND #$80
-    BEQ label_g
-    BNE label_h
-    NOP
-
-label_g:
+    AND #$80 ; jump button pressed?
+    BNE do_jump_from_stairs
+jmp_to_player_step_stair:
+    ; jump to the appropriate step handler (9 or A)
     LDA player_state
-    CMP #$09
-    BNE label_i
+    CMP #$09 ; is on stairs?
+    BNE jmp_to_player_step_A_stair_walk
     JMP player_step_9_stair_stand
 
-label_i:
+jmp_to_player_step_A_stair_walk:
     JMP player_step_A_stair_walk
 
-label_h:
+do_jump_from_stairs:
+    ; zero the xspeed (for some reason) and then jump.
     LDA #$00
     STA player_air_xspeed
     STA player_xspeed_frac
     JMP do_jump
     
-label_z:
-    BEQ label_j
-
-label_k:
+hitstun:
+    BEQ end_hitstun
+force_hitstun:
+    ; zero the x- and y-speed. (stair stun.)
     LDA #$00
     LDY #$00
     JSR set_player_xspeed
     JSR set_player_yspeed
     RTS
 
-label_j:
+end_hitstun:
+    ; stop being hitstunned.
     LDA player_state
-    CMP #$09
-    BEQ label_k
+    CMP #$09 ; is on stairs?
+    BEQ force_hitstun
+    
+    ; if was moving, restore movement.
     LDX #$00
     LDA player_image
     CMP #$08
-    BMI label_l
+    BMI restore_yspeed
     DEX
 
-label_l:
-    STX player_vspeed
+restore_yspeed:
+    STX player_yspeed
     LDA #$80
-    STA player_vspeed_frac
+    STA player_yspeed_frac
     STA player_xspeed_frac
     LDX #$00
     LDA player_facing
-    BNE label_m
+    BNE restore_xspeed
     DEX
 
-label_m:
+restore_xspeed:
     STX player_air_xspeed
-    BNE label_i
+    BNE jmp_to_player_step_A_stair_walk
 
-label_p:
+zero_fracxspeed_then_custom_jump:
     LDA #$00
     STA player_xspeed_frac
     JMP custom_jump_helper
 
-label_n:
-    LDA player_vspeed
+is_vcancel_candidate:
+    ; is the player rising and not inside of a tile?
+    LDA player_yspeed
     BPL label_rts
     LDY #$10
     JSR check_tile
@@ -292,20 +305,21 @@ label_rts:
 should_v_cancel:
     TYA
     PHA
-    JSR label_q
+    JSR vcancel_check_cutscene
     TAX
     PLA
     TAY
     TXA
     RTS
 
-label_q:
+; check cutscene, and if not a cutscene, check vcancel candidate.
+vcancel_check_cutscene:
     LDA $04ED
     CMP #$FF
-    BNE label_n
+    BNE is_vcancel_candidate
     LDA $04A4
     CMP #$01
-    BNE label_n
+    BNE is_vcancel_candidate
     RTS
 
 ; ------------------------------------------------------------------------------
@@ -331,7 +345,7 @@ continue_knockback:
 ; ----------------------------------------------------
 FROM $FEFA
 
-;draw Simon conditional on iframe parity.
+;draw player conditional on iframe parity.
 ifndef BISQWIT
     include "flicker.asm"
 endif

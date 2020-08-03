@@ -17,8 +17,8 @@ player_iframes EQU $4f8
 player_xspeed EQU $6d
 player_xspeed_frac EQU $6c
 
-player_vspeed EQU $36c
-player_vspeed_frac EQU $37e
+player_yspeed EQU $36c
+player_yspeed_frac EQU $37e
 
 player_y EQU $324
 player_x EQU $348
