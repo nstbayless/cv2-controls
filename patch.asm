@@ -4,9 +4,14 @@ INCLUDE "pre.asm"
 
 INCLUDE "defs.asm"
 
-; addresses
+; location of some usable space in the different banks
+BANK3_FREE = $b74c
 
-BANK3_FREE = $b74c ; free space at the end of bank 3
+ifndef BISQWIT
+    BANK7_FREE = $bb00
+else
+    BANK7_FREE = $b800
+endif
 
 ; ------------------------------------------------------------------------------
 BANK 0
