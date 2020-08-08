@@ -102,7 +102,7 @@ do
         continue
     fi
     
-    mv "$outfile.nes" nes/
+    mv -t nes/ $outfile.nes*
     
     if [ -f patch.nes ]
     then

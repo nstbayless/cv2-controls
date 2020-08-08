@@ -259,14 +259,15 @@ force_hitstun:
 end_hitstun:
     ; stop being hitstunned.
     LDA player_state
-    CMP #$09 ; is on stairs?
+    CMP #$09 ; is standing on stairs?
     BEQ force_hitstun
     
     ; if was moving, restore movement.
-    LDX #$00
-    LDA player_image
-    CMP #$08
-    BMI restore_yspeed
+    ; xspeed and yspeed are +/- 0.5 each, depending 
+    ; on stair direction and facing.
+    LDA player_stair_direction
+    EOR player_facing
+    TAX
     DEX
 
 restore_yspeed:
