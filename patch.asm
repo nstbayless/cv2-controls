@@ -8,6 +8,8 @@ INCLUDE "defs.asm"
 
 ; free space in banks
 BANK1_FREE = $b7ac
+BANK2_FREE = $bef9
+BANK2_FREE_END = $bfcf
 BANK3_FREE = $b74c
 
 ; ------------------------------------------------------------------------------
@@ -130,6 +132,25 @@ FROM $86ED:
 ;  a*Y:A**
 check_tile:
 
+FROM $883B
+; calculates y position given a camera offset of $00
+; stores result in $00:$01
+; seems to store the result in mod224 coords
+calc_y_position:
+
+FROM $885C
+; converts camera coords (mod224) to standard coords (mod256),
+; stores result in $00:$01
+calc_y_camcoords:
+
+FROM $886B
+convert_camcoords_to_standard_coords:
+; converts Y:A from camera (mod224) to standardcoords
+; stores result in $00:$01
+
+FROM $8879
+calc_object_y_position:
+
 FROM $88D9
 do_jump:
 
@@ -155,6 +176,18 @@ player_step_9_stair_stand:
 ; knockback injection -- jump to custom jump code.
 FROM $8A16
 BNE jmp_to_custom_jump_logic
+
+FROM $8AF1
+player_step_9_press_right:
+
+FROM $8B09
+player_step_9_press_left:
+
+FROM $8B31
+player_step_9_set_flags:
+
+FROM $8A63
+player_step10_set_sprite:
 
 FROM $AADC
 draw_player:
@@ -203,9 +236,15 @@ vcancel:
 no_vcancel:
     LDA player_state
     CMP #$02 ; is jumping? (and not attacking)
-    BEQ jmp_to_jump_logic
+    BEQ stair_checking
     ; reset facing if player is attacking
     STY player_facing
+
+stair_checking:
+    IFDEF CHECK_STAIRS_ENABLED
+        JSR stair_checking_subroutine
+    ENDIF
+
 jmp_to_jump_logic:
     JMP player_jump_logic
 
@@ -321,11 +360,31 @@ vcancel_check_cutscene:
     LDA $04A4
     CMP #$01
     BNE is_vcancel_candidate
+pre_stairs3_rts:
     RTS
+    
+include "stairs_3.asm"
+
+; ------------------------------------------------------------------------------
+BANK 2
+BASE $8000
+
+; check that we only overwrite the value $FF
+FILLVALUE $FF
+COMPARE
+
+FROM BANK2_FREE
+include "stairs.asm"
+
+ENDCOMPARE
 
 ; ------------------------------------------------------------------------------
 BANK 7
 BASE $C000
+
+; switches to bank in A
+FROM $C183
+bankswitch:
 
 ; sets iframes on spawn(?)
 FROM $C546

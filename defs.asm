@@ -10,6 +10,14 @@ BASE $F5
 button_pressed:
 
 BASE $F7
+; 1: right
+; 2: left
+; 4: down
+; 8: up
+; 10: 
+; 20: 
+; 40: 
+; 80:
 button_down:
 
 ; ------------------------------------------------------------------------------
@@ -26,6 +34,10 @@ BASE $468
 ; 0: diagonal top-left to bottom-right
 ; 1: diagonal top-right to bottom-left
 player_stair_direction:
+
+BASE $47a
+; when this reaches 0, pause climbing the stair.
+player_stair_timer:
 
 BASE $80
 player_energy:
@@ -84,6 +96,21 @@ player_substate:
 BASE $300
 player_image:
 
+; ------------------------------------------------------------------------------
+BASE $53
+camera_x:
+
+; high bit of camera_x
+BASE $54
+camera_x_screen:
+
+; ranges from 0 to 224 half-inclusive
+BASE $56
+camera_y:
+
+; measures increments of 224 of camera_y
+BASE $57
+camera_y_screen:
 
 ; ------------------------------------------------------------------------------
 ; world properties
@@ -119,6 +146,18 @@ world_chunkset:
 BASE $70
 world_area_tile_ptr:
 
+; points to array of FF-terminated 2-byte stair data
+; *in bank 2*
+; stair data as follows:
+; first byte ---
+;   bit 7: is the stair upward?
+;   bits 0-6: x position of stair div 8
+; second byte ---
+;   bit 7: is the stair diagonal trbl?
+;   bits 0-6: y position of stair div 8
+BASE $72
+world_stairs_ptr:
+
 
 ; half-inclusive range of terrain data.
 BASE $520
@@ -145,5 +184,23 @@ terrain_end:
 ; 2E: NPC in cloak. Eery.
 ; 35: NPC with cane
 ; 37: powerup / heart
+
+; ------------------------------------------------------------------------------
+; temporary variables
+varPX=$02
+varPX2=$03
+varPY=$00
+varPY2=$01
+;varD=$93
+;varD2=$94
+varBL=$95
+varBR=$96
+varTL=$97
+varTR=$98
+varZ=$4
+varX=$5
+varY=$7
+varYY=$8
+varW=$9
 
 ENDE
