@@ -1,20 +1,21 @@
 ## Instructions for Setting Up and Contributing
 
-Run the `setup.sh` script before starting in order to enable githooks
-and to automatically apply the patch.
+You require a [special version of asm6f](https://github.com/nstbayless/asm6f) which has support for patching directives. Make sure this version of `asm6f` is on the PATH.
+
+Optionally, put [ipsnect](https://github.com/nstbayless/ipsnect) on the path to generate a patch map.
 
 First you must supply your own ROM for Castlevania II: Simon's Quest (USA).
 Paste the ROM into the repo and name it `base.nes`. Then run `setup.sh`.
 This will generate a `working.nes` file which you can run and edit,
 which should be up-to-date with the repository patch.
 
-Before contributing, a githook will require you to make sure that
-`patch.ips` is up-to-date with `working.nes`. If you would like to
-commit, either run `make-patch.sh` to bring `patch.ips` up-to-date with
-`working.nes` (recommended), or commit again with the `--no-verify`
-option to prevent git from running the githook (not recommended).
+Finally, place your ROM into this directory and call it `base.nes`. You can also
+add `base-bisqwit.nes` (just apply bisqwit's retranslation to `base.nes`).
 
-Finally, if possible, please make sure your contributions are compatible
+Then run `./build.sh`. You will need bash to do this. On windows, if you have [git installed](https://git-scm.com/download/win), you may be able to run `./build.sh` from your git terminal (which comes with bash).
+You should see several files generated, including .ips and .nes files.
+
+Additionally, if possible, please make sure your contributions are compatible
 with this English localization hack as well:
 http://www.romhacking.net/hacks/1983/
 You can do this by applying the localization patch directly to `base.nes`.
