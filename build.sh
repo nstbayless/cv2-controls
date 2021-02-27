@@ -3,6 +3,7 @@ bases=(base.nes base-bisqwit.nes)
 configs=(STANDARD BISQWIT)
 outs=(standard bisqwit)
 folders=("standard/" "bisqwit/")
+defs=(standard novcancel)
 
 export="cv2-controls"
 
@@ -42,74 +43,90 @@ do
     echo "Producing hacks for $BASE"
     
     mkdir "$export/$folder"
+
+    for j in {0..1}
+    do
+        def="${defs[$j]}"
         
-    outfile="$OUT"
-    
-    echo "------------------------------------------"
-    echo "generating patch ($outfile) from $BASE"
-    chmod a-w "$BASE"
-    echo "INCNES \"$BASE\"" > inc-base.asm
-    which asm6f > /dev/null
-    if [ $? != 0 ]
-    then
-        echo "asm6f is not on the PATH."
-        continue
-    fi
-    printf 'base size 0x%x\n' `stat --printf="%s" "$BASE"`
-    asm6f -c -n -i "-d$CONFIG" "-dUSEBASE" "$SRC" "$outfile.nes"
-    
-    if [ $? != 0 ]
-    then
-        exit
-    fi
-    
-    printf 'out size 0x%x\n' `stat --printf="%s" "$outfile.nes"`
-    
-    if [ $? != 0 ]
-    then
-        continue
-    fi
-    
-    #continue
-    if ! [ -f "$outfile.ips" ]
-    then
+        if [ $def == "standard" ]
+        then
+            outfile="$OUT"
+        else
+            outfile="$OUT-$def"
+        fi
+        
+        echo "------------------------------------------"
+        echo "generating patch ($outfile) from $BASE"
+        chmod a-w "$BASE"
+        echo "INCNES \"$BASE\"" > inc-base.asm
+
+        if [ $def == "novcancel" ]
+        then
+            echo "NOVCANCEL=1" >> inc-base.asm
+        fi
+
+        which asm6f > /dev/null
+        if [ $? != 0 ]
+        then
+            echo "asm6f is not on the PATH."
+            continue
+        fi
+        printf 'base size 0x%x\n' `stat --printf="%s" "$BASE"`
+        asm6f -c -n -i "-d$CONFIG" "-dUSEBASE" "$SRC" "$outfile.nes"
+        
+        if [ $? != 0 ]
+        then
+            exit
+        fi
+        
+        printf 'out size 0x%x\n' `stat --printf="%s" "$outfile.nes"`
+        
+        if [ $? != 0 ]
+        then
+            continue
+        fi
+        
+        #continue
+        if ! [ -f "$outfile.ips" ]
+        then
+            echo
+            echo "Failed to create $outfile.ips"
+            continue
+        fi
         echo
-        echo "Failed to create $outfile.ips"
-        continue
-    fi
-    echo
-    
-    # apply ips patch
-    chmod a+x flips/flips-linux
-    
-    if [ -f patch.nes ]
-    then
-      rm patch.nes
-    fi
-    
-    flips/flips-linux --apply "$outfile.ips" "$BASE" patch.nes
-    if ! [ -f "patch.nes" ]
-    then
-        echo "Failed to apply patch $i."
-        continue
-    fi
-    echo "patch generated."
-    md5sum "$outfile.nes"
-    
-    cmp "$outfile.nes" patch.nes
-    if [ $? != 0 ]
-    then
-        continue
-    fi
-    
-    mv -t nes/ $outfile.nes*
-    
-    if [ -f patch.nes ]
-    then
-      rm patch.nes
-    fi
-    
-    mv $outfile.ips "$export/$folder/"
+        
+        # apply ips patch
+        chmod a+x flips/flips-linux
+        
+        if [ -f patch.nes ]
+        then
+        rm patch.nes
+        fi
+        
+        flips/flips-linux --apply "$outfile.ips" "$BASE" patch.nes
+        if ! [ -f "patch.nes" ]
+        then
+            echo "Failed to apply patch $i."
+            continue
+        fi
+        echo "patch generated."
+        md5sum "$outfile.nes"
+        
+        cmp "$outfile.nes" patch.nes
+        if [ $? != 0 ]
+        then
+            continue
+        fi
+        
+        mv -t nes/ $outfile.nes*
+        
+        if [ -f patch.nes ]
+        then
+        rm patch.nes
+        fi
+        
+        mv $outfile.ips "$export/$folder/"
+    done
 done
 
 echo "============================================"

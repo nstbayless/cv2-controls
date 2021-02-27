@@ -220,7 +220,12 @@ air_neutral_direction:
     STX player_air_xspeed
 
 air_right_tilt:
+
+ifndef NOVCANCEL
     LDA button_down
+else
+    LDA #$80
+endif
     AND #$80
     BNE no_vcancel
     JSR should_v_cancel

@@ -1,13 +1,14 @@
 #### Castlevania II Improved Controls ####
 
+Version: 1.5
+
 This hack modernizes the control scheme of Castlevania 2 to make it less frustrating to people
 used to tighter controls as in Symphony of the Night and Mega Man. It primarily allows the player
 greater control while jumping and on stairs.
 
-
 ############## Instructions ##############
 
-Two versions are included:
+Two basic versions are included:
 * CV2-controls.ips
 	- This is the basic version of the hack that should be applied to a standard ROM.
 	- It should be compatible with several other hacks, but not with Bisqwit's retranslation + map hack.
@@ -24,13 +25,8 @@ Two versions are included:
 	
 Use Lunar IPS or similar to apply the hack to your Castlevania 2 ROM file. 
 https://fusoya.eludevisibility.org/lips/
-	
 
-############# Included Files #############
-	
-- README.txt (this file)
-- CV2-controls.ips (see above)
-- CV2-controls-bisqwit.ips (see above)
+In addition, no-vcancel versions are provided for those who prefer not having vcancel.
 	
 	
 ################ Changes #################
