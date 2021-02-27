@@ -20,6 +20,7 @@ Two versions are included:
     - This version is only compatible with Bisqwit's retranslation + map hack,
 	    located at https://www.romhacking.net/hacks/1032/
 	- do NOT apply this unless Bisqwit's retranslation is already applied.
+	- Compatible only with version 2.9.9.1 of the retranslation (released 2020-07-01).
 	
 Use Lunar IPS or similar to apply the hack to your Castlevania 2 ROM file. 
 https://fusoya.eludevisibility.org/lips/
@@ -29,9 +30,7 @@ https://fusoya.eludevisibility.org/lips/
 	
 - README.txt (this file)
 - CV2-controls.ips (see above)
-- CV2-controls-bisqwit-compat.ips (see above)
-- patch-map.txt (Details the changes at a byte level)
-- patch-map-bisqwit.txt (As above, for the bisqwit version.)
+- CV2-controls-bisqwit.ips (see above)
 	
 	
 ################ Changes #################
@@ -48,12 +47,6 @@ Complete list of changes:
     If the player is struck by an enemy while climbing stairs, they will not be knocked off the stairs. This
 	    is the same as the behaviour in Castlevania 1 and 3.
     Simon blinks rapidly after getting hit, as in Castlevania 1 and 3.
-
-
-############# Similar Hacks ###############
-	
-Similar to the Castlevania 1 hack found here:
-and the Akumajou Densetsu (Castlevania 3) hack found here.
 
 
 ############### Licensing #################
